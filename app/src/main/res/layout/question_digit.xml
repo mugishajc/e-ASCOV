@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:text="@string/fill_fields"
+        style="@style/AnswerTitleText"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:paddingTop="15dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:maxLength="3"
+            android:inputType="numberDecimal"
+            android:background="@drawable/edit_bg"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/unity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/unity_weight"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:layout_marginStart="10dp"
+            style="@style/DefaultText"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="15dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/not_known"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/shape_radio_off"
+            android:tag="0"
+            android:adjustViewBounds="true" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/not_know"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            android:layout_marginStart="15dp"
+            style="@style/DefaultText"/>
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/errorDigit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:visibility="invisible"
+        android:text="@string/select_option_error"
+        style="@style/ErrorText"/>
+
+</LinearLayout>

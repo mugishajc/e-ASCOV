@@ -15,7 +15,8 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         logo.postDelayed({
             startActivity(Intent(this, AgentActivity::class.java))
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout)
             finish()
-        }, 3000)
+        }, 2000)
     }
 }

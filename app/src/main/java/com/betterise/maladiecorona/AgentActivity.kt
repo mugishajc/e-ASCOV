@@ -46,11 +46,14 @@ class AgentActivity : AppCompatActivity(){
     private fun validate(agentNumber : String){
         AgentManager().saveAgentNumber(this, agentNumber)
         startActivity(Intent(this, IntroActivity::class.java))
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout)
         finish()
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         startActivity(Intent(this, IntroActivity::class.java))
+        overridePendingTransition(R.anim.fadeout, R.anim.fadein
+        )
     }
 }

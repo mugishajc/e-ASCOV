@@ -10,5 +10,19 @@ enum class QuestionType {
     TERNARY,
     DIGIT,
     DIGIT_FORCED,
-    DOUBLE
+    DOUBLE,
+    FIRSTNAME,
+    LASTNAME,
+    NATIONAL_ID,
+    PATIENTGENDER,
+    PATIENTTELEPHONE,
+    DOB,
+    OCCUPATION,
+    RESIDENCE,
+    NATIONALITY,
+    PROVINCE,
+    DISTRICT,
+    SECTOR,
+    CELL,
+    VILLAGE
 }

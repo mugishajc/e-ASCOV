@@ -3,7 +3,7 @@ package com.betterise.maladiecorona.managers
 import android.content.Context
 
 /**
- * Created by Alexandre on 01/07/20.
+ * Created by mjc on 01/07/20.
  */
 class AgentManager() {
 
@@ -12,6 +12,9 @@ class AgentManager() {
 
         const val PREFS = "PREFS"
         const val PREF_AGENT_NUMBER = "PREF_AGENT_NUMBER"
+
+
+        const val PREF_AGENT_NAME = "PREF_AGENT_NAME"
     }
 
     /***
@@ -25,10 +28,21 @@ class AgentManager() {
             .apply()
     }
 
+
+    fun saveAgentName(context: Context, agentName: String){
+        var sharedPrefs = context.getSharedPreferences(PREFS, PRIVATE_MODE)
+        sharedPrefs
+            .edit()
+            .putString(PREF_AGENT_NAME, agentName)
+            .apply()
+    }
+
     /***
      * Retrieving the current agent number
      */
     fun getAgentNumber(context: Context)= context.getSharedPreferences(PREFS, PRIVATE_MODE).getString(PREF_AGENT_NUMBER, "")
 
+    fun getAgentName(context: Context)= context.getSharedPreferences(PREFS, PRIVATE_MODE).getString(
+        PREF_AGENT_NAME, "")
 
 }

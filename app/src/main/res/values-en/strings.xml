@@ -21,7 +21,7 @@
     <string name="phone_error">Please enter a 10 digit telephone number</string>
 
     <string name="export">Export</string>
-    <string name="to_export">Export</string>
+    <string name="to_export">Sync Now</string>
     <string name="export_text">You are about to export the %1$d previous diagnoses made.</string>
     <string name="export_done">Export finished</string>
     <string name="export_error">Error in export, please check your internet connection.</string>
@@ -41,8 +41,10 @@
     <string name="weight_error">Please enter weight in between 30 and 220 kg</string>
 
     <string-array name="questions">
-        <item>What is the subject\'s phone number?</item>
-        <item>What is the subject\'s city of residence ?</item>
+
+<!--        <item>What is the subject\'s phone number?</item>-->
+<!--        <item>What is the subject\'s city of residence ?</item>-->
+
         <item>Has the subject traveled to a country or region with community transmission of covid-19 in the prior to the onset symptoms ?</item>
         <item>Has the subject been in contact with a probable or suspect coronavirus positive person in the last 14 days before the onset of symptoms?</item>
         <item>Does the subject says he had fever ?</item>
@@ -69,8 +71,8 @@
 
 
     <string-array name="choices">
-        <item></item>
-        <item></item>
+<!--        <item></item>-->
+<!--        <item></item>-->
         <item>Yes|No</item>
         <item>Yes|No</item>
         <item>Yes|No</item>
@@ -96,8 +98,8 @@
     </string-array>
 
     <string-array name="question_types">
-        <item>tel</item>
-        <item>city</item>
+<!--        <item>tel</item>-->
+<!--        <item>city</item>-->
         <item>binary</item>
         <item>binary</item>
         <item>binary</item>

@@ -11,38 +11,75 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
-import com.betterise.maladiecorona.managers.GeolocManager
-import com.betterise.maladiecorona.managers.PollManager
-import com.betterise.maladiecorona.managers.QuestionManager
+import com.betterise.maladiecorona.managers.*
 import com.betterise.maladiecorona.model.Question
 import com.betterise.maladiecorona.model.QuestionType
-import com.google.gson.Gson
+import kotlinx.android.synthetic.main.activity_agent.*
+import kotlinx.android.synthetic.main.activity_patient_details.*
 import kotlinx.android.synthetic.main.activity_question.*
+import kotlinx.android.synthetic.main.activity_question.btn_next
+import kotlinx.android.synthetic.main.activity_question.question
 import kotlinx.android.synthetic.main.question_bullet.view.*
-import kotlinx.android.synthetic.main.question_city.*
 import kotlinx.android.synthetic.main.question_city.view.*
 import kotlinx.android.synthetic.main.question_digit.view.*
 import kotlinx.android.synthetic.main.question_digit.view.unity
 import kotlinx.android.synthetic.main.question_digit.view.value
-import kotlinx.android.synthetic.main.question_tel.view.*
-import kotlinx.android.synthetic.main.question_digit_forced.*
 import kotlinx.android.synthetic.main.question_digit_forced.view.*
+import kotlinx.android.synthetic.main.question_tel.view.*
 
 /**
- * Created by Alexandre on 24/06/20.
+ * Created by MJC on 01/07/20.
  */
 class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManager.GeolocListener {
 
-    var questionManager : QuestionManager? = null
-    var group : ViewGroup? = null
+    var questionManager: QuestionManager? = null
+    var group: ViewGroup? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_question)
+
+
+//        val intent: Intent = getIntent()
+//        var firstname: String = intent.getStringExtra("firstname")
+//        var lastname: String = intent.getStringExtra("lastname")
+//        var national_ID: String = intent.getStringExtra("national_ID")
+//        var patientgender: String = intent.getStringExtra("patientgender")
+//        var patienttelephone: String = intent.getStringExtra("patienttelephone")
+//        var dob: String = intent.getStringExtra("dob")
+//        var occupation: String = intent.getStringExtra("occupation")
+//        var ressidence: String = intent.getStringExtra("residence")
+//        var nationality: String = intent.getStringExtra("nationality")
+//        var province: String = intent.getStringExtra("province")
+//        var district: String = intent.getStringExtra("district")
+//        var sector: String = intent.getStringExtra("sector")
+//        var cell: String = intent.getStringExtra("cell")
+//        var village: String = intent.getStringExtra("village")
+
+
+//
+//        AgentManager().saveAgentName(this, chw_names.text.toString())
+//        AgentManager().saveAgentName(this, phone.text.toString())
+        PatientManager().savePatientFirstname(this, intent.getStringExtra("firstname"));
+        PatientManager().savePatientLastname(this, intent.getStringExtra("lastname"));
+        PatientManager().savePatientNational_ID(this, intent.getStringExtra("national_ID"));
+        PatientManager().savePatientGender(this, intent.getStringExtra("patientgender"));
+        PatientManager().savePatientTelephone(this, intent.getStringExtra("patienttelephone"));
+        PatientManager().savePatientDob(this, intent.getStringExtra("dob"));
+        PatientManager().savePatientOccupation(this, intent.getStringExtra("occupation"));
+        PatientManager().savePatientNationality(this, intent.getStringExtra("nationality"));
+        PatientManager().savePatientResidence(this, intent.getStringExtra("residence"));
+        PatientManager().savePatientProvince(this, intent.getStringExtra("province"));
+        PatientManager().savePatientDistrict(this, intent.getStringExtra("district"));
+        PatientManager().savePatientSector(this, intent.getStringExtra("sector"));
+        PatientManager().savePatientCell(this, intent.getStringExtra("cell"));
+        PatientManager().savePatientVillage(this, intent.getStringExtra("village"));
+        PatientManager().savePatientAscov_Result(this,"null")
+
 
         questionManager = QuestionManager(
             resources.getStringArray(R.array.questions),
@@ -54,11 +91,10 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         btn_next.setOnClickListener(this)
 
         btn_back.setOnClickListener {
-            if (questionManager!!.canGoBack()){
+            if (questionManager!!.canGoBack()) {
                 questionManager?.previousQuestion()
                 loadQuestion()
-            }
-            else
+            } else
                 finish()
 
         }
@@ -70,7 +106,32 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
     }
 
 
-    override fun onClick(view: View){
+
+    private fun loadQuestion() {
+
+        question.text = questionManager?.getCurrentQuestion()
+        progress.text = String.format(
+            getString(R.string.question_progress),
+            (questionManager?.getCurrentIndex()?.plus(1)),
+            questionManager?.getQuestionCount()
+        )
+        btn_next.text =
+            getString(if (questionManager!!.hasMoreQuestion()) R.string.next_question else R.string.save_and_continue)
+        btn_next.isEnabled = false
+
+        when (questionManager?.getCurrentQuestionType()) {
+           // QuestionType.CITY -> loadCity()
+            QuestionType.DIGIT -> loadDigitChoice()
+            QuestionType.BINARY -> loadYesNo()
+            QuestionType.DOUBLE -> loadTwoBullets()
+            QuestionType.TERNARY -> loadThreeBullets()
+           // QuestionType.TELEPHONE -> loadTelephone()
+            QuestionType.DIGIT_FORCED -> loadDigitForced()
+        }
+
+    }
+
+    override fun onClick(view: View) {
 
         var result = questionManager?.getResults()
 
@@ -81,39 +142,45 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
             } else {
 
                 var poll = questionManager!!.createPoll(this)
+
                 PollManager().addPoll(this, poll)
 
+
+
                 var result = questionManager!!.getResults()
-                val intent = Intent(this, ResultActivity::class.java)
-                intent.putExtra(ResultActivity.EXTRA_RESULT, result)
-                startActivity(intent)
-                finish()
+                val intenti = Intent(this, ResultActivity::class.java)
+
+                intenti.putExtra("firstname", intent.getStringExtra("firstname").toString())
+                intenti.putExtra("lastname", intent.getStringExtra("lastname").toString())
+                intenti.putExtra("nid", intent.getStringExtra("national_ID").toString())
+                intenti.putExtra("gender",intent.getStringExtra("patientgender"))
+                intenti.putExtra("telephone", intent.getStringExtra("patienttelephone").toString())
+                intenti.putExtra("dob", intent.getStringExtra("dob"))
+                intenti.putExtra("occupation", intent.getStringExtra("occupation").toString())
+                intenti.putExtra("residence", intent.getStringExtra("residence"))
+                intenti.putExtra("nationality",intent.getStringExtra("nationality"))
+                intenti.putExtra("province", intent.getStringExtra("province").toString())
+                intenti.putExtra("district",intent.getStringExtra("district").toString())
+                intenti.putExtra("sector",intent.getStringExtra("sector").toString())
+                intenti.putExtra("cell", intent.getStringExtra("cell").toString())
+                intenti.putExtra("village", intent.getStringExtra("village").toString())
+             //  intenti.putExtra("resulti",result)
+
+                intenti.putExtra(ResultActivity.EXTRA_RESULT, result)
+
+
+
+           startActivity(intenti)
+       overridePendingTransition(R.anim.fadein,R.anim.fadeout);
+
+
             }
         }
     }
 
-    private fun loadQuestion(){
-
-        question.text = questionManager?.getCurrentQuestion()
-        progress.text = String.format(getString(R.string.question_progress), (questionManager?.getCurrentIndex()?.plus(1)), questionManager?.getQuestionCount())
-        btn_next.text = getString(if (questionManager!!.hasMoreQuestion()) R.string.next_question else R.string.save_and_continue)
-        btn_next.isEnabled = false
-
-        when (questionManager?.getCurrentQuestionType()){
-            QuestionType.CITY           -> loadCity()
-            QuestionType.DIGIT          -> loadDigitChoice()
-            QuestionType.BINARY         -> loadYesNo()
-            QuestionType.DOUBLE         -> loadTwoBullets()
-            QuestionType.TERNARY        -> loadThreeBullets()
-            QuestionType.TELEPHONE      -> loadTelephone()
-            QuestionType.DIGIT_FORCED   -> loadDigitForced()
-        }
-
-    }
 
 
-
-    private fun goBack() : Boolean {
+    private fun goBack(): Boolean {
         if (questionManager!!.canGoBack()) {
             questionManager?.previousQuestion()
             loadQuestion()
@@ -124,35 +191,37 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         return false
     }
 
-    private fun loadCity(){
-        answer_container.removeAllViews()
-        group = View.inflate(this, R.layout.question_city, null) as ViewGroup
 
-        val answer = questionManager!!.getAnswer()
-        btn_next.isEnabled = true
 
-        group?.city?.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus)
-                group?.city?.setBackgroundResource(R.drawable.edit_bg_focused)
+//    private fun loadCity() {
+//        answer_container.removeAllViews()
+//        group = View.inflate(this, R.layout.question_city, null) as ViewGroup
+//
+//        val answer = questionManager!!.getAnswer()
+//        btn_next.isEnabled = true
+//
+//        group?.city?.setOnFocusChangeListener { _, hasFocus ->
+//            if (hasFocus)
+//                group?.city?.setBackgroundResource(R.drawable.edit_bg_focused)
+//
+//            btn_next.isEnabled = true
+//            group?.errorCity?.visibility = INVISIBLE
+//            group?.city?.setBackgroundResource(R.drawable.edit_bg_focused)
+//
+//        }
+//        group?.city?.doOnTextChanged { text, _, _, _ ->
+//            btn_next.isEnabled = true
+//            group?.errorCity?.visibility = INVISIBLE
+//            group?.city?.setBackgroundResource(R.drawable.edit_bg_focused)
+//        }
+//
+//        group?.city?.setText(answer.text)
+//
+//        group?.geoloc?.setOnClickListener { requestGeoloc() }
+//        answer_container.addView(group)
+//    }
 
-            btn_next.isEnabled = true
-            group?.errorCity?.visibility = INVISIBLE
-            group?.city?.setBackgroundResource(R.drawable.edit_bg_focused)
-
-        }
-        group?.city?.doOnTextChanged { text, _, _, _ ->
-            btn_next.isEnabled = true
-            group?.errorCity?.visibility = INVISIBLE
-            group?.city?.setBackgroundResource(R.drawable.edit_bg_focused)
-        }
-
-        group?.city?.setText(answer.text)
-
-        group?.geoloc?.setOnClickListener { requestGeoloc() }
-        answer_container.addView(group)
-    }
-
-    private fun loadYesNo(){
+    private fun loadYesNo() {
         group = View.inflate(this, R.layout.question_bullet, null) as ViewGroup?
 
         group?.radio1?.setText(R.string.yes)
@@ -163,7 +232,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
 
         btn_next.isEnabled = true
 
-        when (answer.value){
+        when (answer.value) {
             1 -> group?.radio1?.isChecked = true
             2 -> group?.radio2?.isChecked = true
         }
@@ -181,7 +250,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         answer_container.addView(group)
     }
 
-    private fun loadTwoBullets(){
+    private fun loadTwoBullets() {
         group = View.inflate(this, R.layout.question_bullet, null) as ViewGroup?
         var answers = questionManager?.getChoices()
 
@@ -193,7 +262,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         var answer = questionManager!!.getAnswer()
         btn_next.isEnabled = true
 
-        when (answer.value){
+        when (answer.value) {
             1 -> group?.radio1?.isChecked = true
             2 -> group?.radio2?.isChecked = true
         }
@@ -212,7 +281,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         answer_container.addView(group)
     }
 
-    private fun loadThreeBullets(){
+    private fun loadThreeBullets() {
         group = View.inflate(this, R.layout.question_bullet, null) as ViewGroup?
         var choices = questionManager?.getChoices()
 
@@ -223,7 +292,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         var answer = questionManager!!.getAnswer()
         btn_next.isEnabled = true
 
-        when (answer.value){
+        when (answer.value) {
             1 -> group?.radio1?.isChecked = true
             2 -> group?.radio2?.isChecked = true
             3 -> group?.radio3?.isChecked = true
@@ -245,7 +314,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         answer_container.addView(group)
     }
 
-    private fun loadDigitChoice(){
+    private fun loadDigitChoice() {
         group = View.inflate(this, R.layout.question_digit, null) as ViewGroup?
         val choices = questionManager?.getChoices()
 
@@ -267,8 +336,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
             group?.value!!.setText(answer.value.toString())
             group?.not_known?.setImageResource(R.drawable.shape_radio_off)
             group?.not_known?.tag = answer.value
-        }
-        else if (answer.value == 1) {
+        } else if (answer.value == 1) {
             group?.not_known?.tag = 1
             group?.not_known?.setImageResource(R.drawable.shape_radio_on)
         }
@@ -285,10 +353,15 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         }
 
 
-        group?.value?.doOnTextChanged{text,_,_,_ ->
+        group?.value?.doOnTextChanged { text, _, _, _ ->
             if (text != null && text.isNotEmpty()) {
                 group?.not_known?.tag = text.toString().toInt()
-                group?.not_known?.setImageDrawable(resources.getDrawable(R.drawable.shape_radio_off, null))
+                group?.not_known?.setImageDrawable(
+                    resources.getDrawable(
+                        R.drawable.shape_radio_off,
+                        null
+                    )
+                )
 
             }
             btn_next.isEnabled = true
@@ -301,38 +374,38 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         answer_container.addView(group)
     }
 
-    private fun loadTelephone(){
-        answer_container.removeAllViews()
-        group = View.inflate(this, R.layout.question_tel, null) as ViewGroup?
-        val answer = questionManager!!.getAnswer()
-        btn_next.isEnabled = true
+//    private fun loadTelephone() {
+//        answer_container.removeAllViews()
+//        group = View.inflate(this, R.layout.question_tel, null) as ViewGroup?
+//        val answer = questionManager!!.getAnswer()
+//        btn_next.isEnabled = true
+//
+//        group?.phone?.setOnFocusChangeListener { v, hasFocus ->
+//            if (hasFocus)
+//                group?.phone?.setBackgroundResource(R.drawable.edit_bg_focused)
+//            btn_next.isEnabled = true
+//            group?.error?.visibility = INVISIBLE
+//            group?.phone?.setBackgroundResource(R.drawable.edit_bg_focused)
+//        }
+//
+//
+//        group?.phone?.doOnTextChanged { _, _, _, _ ->
+//            btn_next.isEnabled = true
+//            group?.error?.visibility = INVISIBLE
+//            group?.phone?.setBackgroundResource(R.drawable.edit_bg_focused)
+//        }
+//
+//        if (answer.text.isNotEmpty())
+//            group?.phone?.setText(answer.text)
+//        else {
+//            group?.phone?.setText(getString(R.string.phone_start) + " ")
+//            group?.phone?.setSelection(4)
+//        }
+//
+//        answer_container.addView(group)
+//    }
 
-        group?.phone?.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus)
-                group?.phone?.setBackgroundResource(R.drawable.edit_bg_focused)
-            btn_next.isEnabled = true
-            group?.error?.visibility = INVISIBLE
-            group?.phone?.setBackgroundResource(R.drawable.edit_bg_focused)
-        }
-
-
-        group?.phone?.doOnTextChanged { _, _, _, _ ->
-            btn_next.isEnabled = true
-            group?.error?.visibility = INVISIBLE
-            group?.phone?.setBackgroundResource(R.drawable.edit_bg_focused)
-        }
-
-        if (answer.text.isNotEmpty())
-            group?.phone?.setText(answer.text)
-        else {
-            group?.phone?.setText(getString(R.string.phone_start)+" ")
-            group?.phone?.setSelection(4)
-        }
-
-        answer_container.addView(group)
-    }
-
-    private fun loadDigitForced(){
+    private fun loadDigitForced() {
         answer_container.removeAllViews()
         group = View.inflate(this, R.layout.question_digit_forced, null) as ViewGroup?
 
@@ -362,21 +435,19 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         answer_container.addView(group)
     }
 
-    private fun validate() = when (questionManager?.getCurrentQuestionType()){
-        QuestionType.CITY -> validateCity()
+    private fun validate() = when (questionManager?.getCurrentQuestionType()) {
+      //  QuestionType.CITY -> validateCity()
         QuestionType.DIGIT -> validateDigit()
         QuestionType.DOUBLE -> validate2Bullets()
         QuestionType.TERNARY -> validate3Bullets()
-        QuestionType.TELEPHONE -> validateTelephone()
+       // QuestionType.TELEPHONE -> validateTelephone()
         QuestionType.DIGIT_FORCED -> validateDigitForced()
         else -> validate2Bullets()
     }
 
 
-
-
     private fun validate2Bullets(): Boolean {
-        if (group?.radio1!!.isChecked || group?.radio2!!.isChecked){
+        if (group?.radio1!!.isChecked || group?.radio2!!.isChecked) {
             questionManager!!.setAnswer(
                 if (group?.radio1!!.isChecked) 1
                 else 2
@@ -390,8 +461,8 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         return false
     }
 
-    private fun validate3Bullets() :Boolean {
-        if (group?.radio1!!.isChecked || group?.radio2!!.isChecked || group?.radio3!!.isChecked){
+    private fun validate3Bullets(): Boolean {
+        if (group?.radio1!!.isChecked || group?.radio2!!.isChecked || group?.radio3!!.isChecked) {
             questionManager!!.setAnswer(
                 if (group?.radio1!!.isChecked) 1
                 else if (group?.radio2!!.isChecked) 2
@@ -406,52 +477,50 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         return false
     }
 
-    private fun validateDigit() : Boolean {
+    private fun validateDigit(): Boolean {
 
-        if (group?.not_known!!.tag == 1){
+        if (group?.not_known!!.tag == 1) {
             questionManager?.setAnswer(1)
             return true
-        }
-        else if (testRange(30, 220)){
+        } else if (testRange(30, 220)) {
             var intVal = group?.value?.text.toString().toInt()
             questionManager?.setAnswer(intVal)
             return true
         }
 
         var errorDigit = findViewById<TextView>(R.id.errorDigit)
-        errorDigit.setText( if (questionManager?.getCurrentIndex() == Question.HEIGHT) R.string.height_error else R.string.weight_error)
+        errorDigit.setText(if (questionManager?.getCurrentIndex() == Question.HEIGHT) R.string.height_error else R.string.weight_error)
         errorDigit.visibility = VISIBLE
         group?.value?.setBackgroundResource(R.drawable.edit_bg_error)
         btn_next.isEnabled = false
         return false
     }
 
-    private fun validateTelephone() : Boolean {
-        questionManager!!.setTextAnswer(group?.phone?.text.toString())
+//    private fun validateTelephone(): Boolean {
+//        questionManager!!.setTextAnswer(group?.phone?.text.toString())
+//        if (group?.phone?.text?.toString()?.replace(" ", "")?.length == 10)
+//            return true
+//
+//        group?.error?.visibility = View.VISIBLE
+//        group?.phone?.setBackgroundResource(R.drawable.edit_bg_error)
+//        btn_next.isEnabled = false
+//        return false
+//    }
+//
+//    private fun validateCity(): Boolean {
+//        questionManager!!.setTextAnswer(group?.city?.text.toString())
+//        if (!group?.city?.text.isNullOrEmpty())
+//            return true
+//
+//        group?.city?.setBackgroundResource(R.drawable.edit_bg_error)
+//        group?.errorCity?.visibility = VISIBLE
+//        btn_next.isEnabled = false
+//        return false
+//    }
 
-        if (group?.phone?.text?.toString()?.replace(" ","")?.length == 10)
-            return true
+    private fun validateDigitForced(): Boolean {
 
-        group?.error?.visibility = View.VISIBLE
-        group?.phone?.setBackgroundResource(R.drawable.edit_bg_error)
-        btn_next.isEnabled = false
-        return false
-    }
-
-    private fun validateCity() : Boolean {
-        questionManager!!.setTextAnswer(group?.city?.text.toString())
-        if (!group?.city?.text.isNullOrEmpty())
-            return true
-
-        group?.city?.setBackgroundResource(R.drawable.edit_bg_error)
-        group?.errorCity?.visibility = VISIBLE
-        btn_next.isEnabled = false
-        return false
-    }
-
-    private fun validateDigitForced() : Boolean {
-
-        if (questionManager?.getCurrentIndex() == Question.TEMPERATURE3){
+        if (questionManager?.getCurrentIndex() == Question.TEMPERATURE3) {
 
             if (testRange(0, 35)) {
                 questionManager?.setAnswer(group?.value?.text.toString().toInt())
@@ -463,8 +532,7 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
             btn_next.isEnabled = false
             return false
 
-        }
-        else {
+        } else {
 
             if (testRange(0, 120)) {
                 questionManager?.setAnswer(group?.value?.text.toString().toInt())
@@ -478,26 +546,29 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
         }
     }
 
-    private fun testRange(low : Int, high : Int) =
+    private fun testRange(low: Int, high: Int) =
         try {
             group?.value!!.text.toString().toInt() in (low..high)
+        } catch (e: Exception) {
+            false
         }
-        catch (e : Exception) { false }
 
 
     private fun requestGeoloc() {
         try {
             if (GeolocManager().requestLastGeoloc(this))
                 GeolocManager().getLastGeoloc(this, this)
-        }
-        catch (e:java.lang.Exception){
+        } catch (e: java.lang.Exception) {
             Log.e(this.localClassName, e.message)
         }
     }
 
 
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
 
         try {
             when (requestCode) {
@@ -506,19 +577,18 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
                     if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         requestGeoloc()
                     } else {
-                        Log.e(this.localClassName, "Permission geoloc not granted");
+                        Log.e(this.localClassName, "Sorry, Permission geolocation is not granted");
                     }
                 }
 
 
             }
-        }
-        catch (e: java.lang.Exception){
+        } catch (e: java.lang.Exception) {
             Log.e(this.localClassName, e.message)
         }
     }
 
-    override fun onLocation(location : Location?) {
+    override fun onLocation(location: Location?) {
         try {
             if (location == null)
                 GeolocManager().startLocationUpdate(this, this)
@@ -531,15 +601,14 @@ class QuestionActivity : AppCompatActivity(), View.OnClickListener, GeolocManage
                 }
 
             }
-        }
-        catch (e:java.lang.Exception){
+        } catch (e: java.lang.Exception) {
             Log.e(this.localClassName, e.message)
         }
 
     }
 
     override fun onLocationFailed() {
-        Log.e(this.localClassName,"FAILED")
+        Log.e(this.localClassName, "FAILED")
     }
 
 }

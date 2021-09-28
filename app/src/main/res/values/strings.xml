@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">A-mugisha</string>
+    <string name="app_name">ascov</string>
 
     <string name="datetime_format" translatable="false">dd/MM/yyyy HH:mm</string>
     <string name="date_format" translatable="false">dd/MM/yyyy</string>
@@ -47,8 +47,8 @@
     <string name="weight_error">Nyamuneka hitamo ibiro biri hagati ya 30 na 220 kg</string>
 
     <string-array name="questions">
-        <item>Nimero ya telephoni y\'ingingo ?</item>
-        <item>Ni uwuhe mujyi w\'ingingo ?</item>
+        <!--        <item>Nimero ya telephoni y\'ingingo ?</item>-->
+        <!--        <item>Ni uwuhe mujyi w\'ingingo ?</item>-->
         <item>Isomo ryagiye mu gihugu cyangwa mukarere hamweno kwanduza abaturage covid-19 mu minsi 14 mbere y\'uko ibimenyetso bitangira?</item>
         <item>Iyi ngingo yaba yarahuye n\'muntu ushobora kuba ukekwaho coronavirus wanduye mu minsi 14 ishize mbere y\'uko ibimenyetso bitangira ?</item>
         <item>Ingingo ivuga ko yari afite umuriro?</item>
@@ -75,8 +75,8 @@
 
 
     <string-array name="choices">
-        <item></item>
-        <item></item>
+        <!--        <item></item>-->
+        <!--        <item></item>-->
         <item>Yego|Oya</item>
         <item>Yego|Oya</item>
         <item>Yego|Oya</item>
@@ -102,8 +102,8 @@
     </string-array>
 
     <string-array name="question_types">
-        <item>tel</item>
-        <item>city</item>
+        <!--        <item>tel</item>-->
+        <!--        <item>city</item>-->
         <item>binary</item>
         <item>binary</item>
         <item>binary</item>

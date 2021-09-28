@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.betterise.maladiecorona.managers.PollManager
 import com.betterise.maladiecorona.model.out.Poll
@@ -17,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Created by Alexandre on 24/06/20.
+ * Created by MJC on 01/07/20.
  */
 class ExportActivity : AppCompatActivity(), View.OnClickListener{
 
@@ -25,7 +26,23 @@ class ExportActivity : AppCompatActivity(), View.OnClickListener{
         const val PRIVATE_MODE = 0
         const val prefs = "PREFS"
         const val prefLastExport = "prefLastExport"
+        const val FIRSTNAME="firstname"
+        const val LASTNAME="LASTNAME"
+        const val NATIONAL_ID="NATIONAL_ID"
+        const val PATIENTGENDER="patientgender"
+        const val PATIENTTELEPHONE="patienttelephone"
+        const val DOB="dob"
+        const val OCCUPATION="occupation"
+        const val RESIDENCE="residence"
+        const val NATIONALITY="nationality"
+        const val PROVINCE="province"
+        const val DISTRICT="district"
+        const val sector="sector"
+        const val CELL="cell"
+        const val VILLAGE="village"
     }
+
+
 
     private var pollManager = PollManager()
     private lateinit var networkManager : NetworkManager
@@ -70,16 +87,19 @@ class ExportActivity : AppCompatActivity(), View.OnClickListener{
 
                     Log.e("Result", res.toString())
 
-                    if (res[ApiService.API_STATUS].asString != ApiService.API_SUCCESS)
+                    if (res[ApiService.API_STATUS].asString != ApiService.API_SUCCESS) {
                         export_text.text = getString(R.string.export_error)
 
-                    else {
+                    }  else {
                         // On success, flagging date and erasing current poll list
                         flagLastExport()
                         last_export.text = getLastExportFlag()
                         pollManager.clearPolls(this)
                         polls = pollManager.getPolls(this)
                         export_text.text = getString(R.string.export_text, polls.size)
+
+                        Toast.makeText(this,"Result "+res.toString(),Toast.LENGTH_LONG).show()
+
                     }
 
                     isSending = false

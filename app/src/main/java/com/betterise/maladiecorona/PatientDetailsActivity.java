@@ -10,11 +10,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.betterise.maladiecorona.managers.QuestionManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,26 +25,45 @@ import java.util.List;
 
 public class PatientDetailsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
-    private Spinner sp_gender,sp_nationality,sp_residence;
-    private String nationality,gender, yearr, month, date,residence;
+
+    /**
+     * Created by MJC on 01/07/20.
+     */
+
+    private Spinner sp_gender, sp_nationality, sp_residence;
+    private String nationality, gender, yearr, month, date, residency, dob;
     private ImageButton btndatepicker;
     private Button btn_next;
     private ImageView btn_back;
     private TextView tvdob;
     private int mYear, mMonth, mDay;
-
+    private EditText etfirstname, etlastname, etnational_ID, etpatientgender, etpatienttelephone, etoccupation, etresidence, etnationality, etprovince, etdistrict, etsector, etcell, etvillage;
+    private String fn, lastname, national_ID, patientgender, patienttelephone, occupation, residence, province, district, sector, cell, village;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_details);
 
-        sp_gender=findViewById(R.id.sp_gender);
-        sp_nationality=findViewById(R.id.sp_nationality);
-        sp_residence=findViewById(R.id.spresidence);
 
-        tvdob=findViewById(R.id.tvdob);
-        btndatepicker=findViewById(R.id.btndatepicker);
+
+        etfirstname=findViewById(R.id.firstname);
+        etlastname=findViewById(R.id.etlastname);
+        etnational_ID=findViewById(R.id.national_ID);
+        etpatienttelephone=findViewById(R.id.patient_telephone);
+        etoccupation=findViewById(R.id.etoccupation);
+        etprovince=findViewById(R.id.etprovince);
+        etdistrict=findViewById(R.id.etdistrict);
+        etsector=findViewById(R.id.etsector);
+        etcell=findViewById(R.id.etcell);
+        etvillage=findViewById(R.id.etvillage);
+
+        sp_gender = findViewById(R.id.sp_gender);
+        sp_nationality = findViewById(R.id.sp_nationality);
+        sp_residence = findViewById(R.id.spresidence);
+
+        tvdob = findViewById(R.id.tvdob);
+        btndatepicker = findViewById(R.id.btndatepicker);
         btndatepicker.setOnClickListener(this);
 
         sp_nationality.setOnItemSelectedListener(this);
@@ -59,7 +81,7 @@ public class PatientDetailsActivity extends AppCompatActivity implements Adapter
         // Drop down layout style - list view with radio button
         ArrayAdapter<String> dataAdapte = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listcountry);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dataAdapte.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        dataAdapte.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_nationality.setAdapter(dataAdapter);
         sp_residence.setAdapter(dataAdapte);
 
@@ -76,9 +98,9 @@ public class PatientDetailsActivity extends AppCompatActivity implements Adapter
         sp_gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(PatientDetailsActivity.this, "sex is "+parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(PatientDetailsActivity.this, "sex is " + parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();
 
-                gender=parent.getItemAtPosition(position)+"";
+                gender = parent.getItemAtPosition(position) + "";
             }
 
             @Override
@@ -91,8 +113,9 @@ public class PatientDetailsActivity extends AppCompatActivity implements Adapter
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                residence = parent.getItemAtPosition(position).toString();
-                Toast.makeText(PatientDetailsActivity.this, "country of residence is "+residence, Toast.LENGTH_SHORT).show();
+                residency = parent.getItemAtPosition(position).toString();
+            //    Toast.makeText(PatientDetailsActivity.this, "country of residence is " + residency, Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -100,9 +123,9 @@ public class PatientDetailsActivity extends AppCompatActivity implements Adapter
 
             }
         });
-        btn_next=findViewById(R.id.btn_next);
+        btn_next = findViewById(R.id.btn_next);
         btn_next.setOnClickListener(this);
-        btn_back=findViewById(R.id.btn_backe);
+        btn_back = findViewById(R.id.btn_backe);
         btn_back.setOnClickListener(this);
 
     }
@@ -111,7 +134,7 @@ public class PatientDetailsActivity extends AppCompatActivity implements Adapter
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         nationality = parent.getItemAtPosition(position).toString();
-        Toast.makeText(this, "taped "+nationality, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "taped " + nationality, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -123,7 +146,7 @@ public class PatientDetailsActivity extends AppCompatActivity implements Adapter
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btndatepicker:
 
 // Get Current Date
@@ -140,6 +163,8 @@ public class PatientDetailsActivity extends AppCompatActivity implements Adapter
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
+                                dob = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+
                                 tvdob.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
 
                                 month = (monthOfYear + 1) + "";
@@ -151,20 +176,60 @@ public class PatientDetailsActivity extends AppCompatActivity implements Adapter
                 datePickerDialog.show();
 
 
-
                 break;
 
             case R.id.btn_next:
-                startActivity(new Intent(PatientDetailsActivity.this,QuestionActivity.class));
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-                finish();
+
+
+
+                fn = etfirstname.getText().toString().trim();
+                lastname = etlastname.getText().toString().trim();
+                national_ID = etnational_ID.getText().toString().trim();
+                province = etprovince.getText().toString().trim();
+                district = etdistrict.getText().toString().trim();
+                sector = etsector.getText().toString().trim();
+                cell = etcell.getText().toString().trim();
+                village = etvillage.getText().toString().trim();
+                occupation=etoccupation.getText().toString().trim();
+                patienttelephone=etpatienttelephone.getText().toString().trim();
+
+                if (fn.isEmpty() || lastname.isEmpty() || national_ID.isEmpty() || province.isEmpty() ||
+                district.isEmpty() || sector.isEmpty() || sector.isEmpty() || cell.isEmpty()
+                || village.isEmpty() || occupation.isEmpty() || patienttelephone.isEmpty()  ){
+                    Toast.makeText(this, "Please All fields are required to be filled", Toast.LENGTH_LONG).show();
+                }else {
+
+
+                    Intent intent = new Intent(PatientDetailsActivity.this, QuestionActivity.class);
+                    intent.putExtra("firstname", fn);
+                    intent.putExtra("lastname", lastname);
+                    intent.putExtra("national_ID", etnational_ID.getText().toString().trim());
+                    intent.putExtra("patientgender", gender);
+                    intent.putExtra("patienttelephone", etpatienttelephone.getText().toString().trim());
+                    intent.putExtra("dob", tvdob.getText().toString());
+                    intent.putExtra("occupation", etoccupation.getText().toString().trim());
+                    intent.putExtra("residence", residency);
+                    intent.putExtra("nationality", nationality);
+                    intent.putExtra("province", province);
+                    intent.putExtra("district", district);
+                    intent.putExtra("sector", sector);
+                    intent.putExtra("cell", cell);
+                    intent.putExtra("village", village);
+
+
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                    finish();
+                }
                 break;
 
             case R.id.btn_back:
-         overridePendingTransition(R.anim.fadeout,R.anim.fadein);
-         finish();
-            break;
+                overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+                finish();
+                break;
 
         }
     }
+
+
 }

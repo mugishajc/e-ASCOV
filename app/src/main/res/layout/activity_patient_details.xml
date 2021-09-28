@@ -94,6 +94,7 @@
                         android:text="First name" />
 
                     <EditText
+                        android:id="@+id/firstname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_bg"
@@ -118,6 +119,7 @@
                         android:text="Last name" />
 
                     <EditText
+                        android:id="@+id/etlastname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_bg"
@@ -140,13 +142,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
-                    android:text="National ID" />
+                    android:text="National ID / Passport" />
 
                 <EditText
+                    android:id="@+id/national_ID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_bg"
                     android:paddingStart="40dp"
+                    android:inputType="number"
                     android:paddingTop="12dp"
                     android:paddingEnd="40dp"
                     android:paddingBottom="12dp" />
@@ -198,12 +202,14 @@
                         android:text="Telephone" />
 
                     <EditText
+                        android:id="@+id/patient_telephone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_bg"
                         android:paddingStart="40dp"
                         android:paddingTop="12dp"
                         android:paddingEnd="40dp"
+                        android:inputType="number"
                         android:paddingBottom="12dp"
 
                         />
@@ -273,6 +279,7 @@
                         android:text="Occupation" />
 
                     <EditText
+                        android:id="@+id/etoccupation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_bg"
@@ -369,6 +376,7 @@
                         android:text="Province" />
 
                     <EditText
+                        android:id="@+id/etprovince"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_bg"
@@ -393,6 +401,7 @@
                         android:text="District" />
 
                     <EditText
+                        android:id="@+id/etdistrict"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_bg"
@@ -424,6 +433,7 @@
                         android:text="Sector" />
 
                     <EditText
+                        android:id="@+id/etsector"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_bg"
@@ -448,6 +458,7 @@
                         android:text="Cell" />
 
                     <EditText
+                        android:id="@+id/etcell"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_bg"
@@ -479,6 +490,7 @@
                         android:text="Village" />
 
                     <EditText
+                        android:id="@+id/etvillage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_bg"

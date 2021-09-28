@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_splash.*
 
 /**
- * Created by Alexandre on 01/07/20.
+ * Created by MJC on 01/07/20.
  */
 class SplashActivity : AppCompatActivity() {
 

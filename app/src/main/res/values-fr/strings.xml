@@ -41,8 +41,8 @@
     <string name="weight_error">Veuillez renseigner un poids entre 30 et 220 kg</string>
 
     <string-array name="questions">
-        <item>Quel est le numéro de téléphone du sujet ?</item>
-        <item>Quelle est la ville de résidence du sujet ?</item>
+<!--        <item>Quel est le numéro de téléphone du sujet ?</item>-->
+<!--        <item>Quelle est la ville de résidence du sujet ?</item>-->
         <item>Le sujet a-t-il voyagé dans un pays ou une région ayant une transmission communautaire du Covid-19 dans les 14 jours précédant l\' apparition des symptômes ?</item>
         <item>Le sujet a-t-il été en contact avec une personne suspecte, probable ou contrôlée positive au Coronavirus dans les 14 derniers jours avant l\'apparition des symptômes ?</item>
         <item>Le sujet déclare-t-il avoir eu de la fièvre ?</item>
@@ -69,8 +69,8 @@
 
 
     <string-array name="choices">
-        <item></item>
-        <item></item>
+<!--        <item></item>-->
+<!--        <item></item>-->
         <item>Oui|Non</item>
         <item>Oui|Non</item>
         <item>Oui|Non</item>
@@ -96,8 +96,8 @@
     </string-array>
 
     <string-array name="question_types">
-        <item>tel</item>
-        <item>city</item>
+<!--        <item>tel</item>-->
+<!--        <item>city</item>-->
         <item>binary</item>
         <item>binary</item>
         <item>binary</item>

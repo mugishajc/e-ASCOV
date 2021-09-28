@@ -3,13 +3,14 @@ package com.betterise.maladiecorona
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.betterise.maladiecorona.managers.AgentManager
 import kotlinx.android.synthetic.main.activity_agent.*
 
 /**
- * Created by Alexandre on 01/07/20.
+ * Created by MJC on 01/07/20.
  */
 
 class AgentActivity : AppCompatActivity(){
@@ -22,11 +23,17 @@ class AgentActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_agent)
 
+
         phone.setSelection(4)
         phone.doOnTextChanged { text, _, _, _ -> btn_next.isEnabled = !text.isNullOrEmpty() }
         btn_next.setOnClickListener {
+            if (chw_names.text.toString().trim().isBlank()) {
+                Toast.makeText(this, "Please,Enter CHW Names first", Toast.LENGTH_LONG).show()
+                error.visibility = View.VISIBLE
+                btn_next.isEnabled = false
+            }
             if (phone.text.toString().replace(" ","").length == PHONE_SIZE)
-                validate(phone.text.toString())
+                validate(phone.text.toString() )
             else {
                 error.visibility = View.VISIBLE
                 phone.setBackgroundResource(R.drawable.edit_bg_error)
@@ -44,7 +51,9 @@ class AgentActivity : AppCompatActivity(){
     }
 
     private fun validate(agentNumber : String){
+
         AgentManager().saveAgentNumber(this, agentNumber)
+        AgentManager().saveAgentName(this,chw_names.text.toString())
         startActivity(Intent(this, IntroActivity::class.java))
         overridePendingTransition(R.anim.fadein, R.anim.fadeout)
         finish()

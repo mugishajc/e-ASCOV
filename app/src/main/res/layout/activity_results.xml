@@ -54,7 +54,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="20dp"
+            android:padding="5dp"
             >
             <LinearLayout
                 android:id="@+id/lau"
@@ -79,17 +79,49 @@
             </LinearLayout>
 
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/result_text"
+            <LinearLayout
+                android:padding="5dp"
                 android:layout_below="@id/lau"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_margin="5dp"
+                android:orientation="vertical"
+                >
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/result_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
                 style="@style/DefaultText"/>
 
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/result2_text1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:background="@color/white"
+                    style="@style/DefaultText"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/result2_text2"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:background="@color/white"
+                        style="@style/DefaultText"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -101,7 +133,7 @@
         android:layout_above="@id/btn_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="15dp"
         android:onClick="simulateTestRequest"
         android:background="@drawable/edit_bg_error"
         android:text="Proceed to RDT"
@@ -113,8 +145,8 @@
         android:id="@+id/btn_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Go back"
+        android:layout_margin="15dp"
+        android:text="Go Home"
         style="@style/BottomButton"
         android:layout_alignParentBottom="true"/>
 

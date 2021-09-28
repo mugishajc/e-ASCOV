@@ -102,6 +102,9 @@ class ResultManager {
         return result
     }
 
+
+
+
     /***
      * Calculating IMC
      */

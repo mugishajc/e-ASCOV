@@ -12,6 +12,11 @@ import java.util.*
 
 class IntroActivity : AppCompatActivity() {
 
+
+    /**
+     * Created by MJC on 01/07/20.
+     */
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
